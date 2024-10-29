@@ -2,16 +2,18 @@ package ey.app.chatbot.serviceImpl;
 
 import ey.app.chatbot.entity.ChatHistoryEntity;
 import ey.app.chatbot.entity.LoginEntity;
+import ey.app.chatbot.entity.UserRegistraionEntity;
 import ey.app.chatbot.repository.ChatHistoryRepo;
 import ey.app.chatbot.repository.LoginRepo;
+import ey.app.chatbot.repository.UserRegistrationRepo;
 import ey.app.chatbot.service.LoginService;
 import ey.app.dto.conversationDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -28,6 +30,13 @@ public class LoginServiceImpl implements LoginService {
 	@Autowired
 	ChatHistoryRepo chatHistoryRepo;
 	
+	
+	@Autowired
+	UserRegistrationRepo userRegistrationRepo;
+	
+	@Autowired
+    private PasswordEncoder passwordEncoder;
+	
 	@Autowired
 	private JavaMailSender emailSender;
 	
@@ -43,7 +52,7 @@ public class LoginServiceImpl implements LoginService {
 		
 		String otp = generateOTP();
 		
-		loginEntity.setPass(otp);
+		loginEntity.setPassword(otp);
 		SimpleMailMessage message = new SimpleMailMessage();
 		message.setFrom(FROM_EMAIL);
 		 
@@ -102,4 +111,21 @@ public class LoginServiceImpl implements LoginService {
 		return chatHistorydetails;
 		
 	}
+
+	@Override
+	public String saveRegistrationDetails(UserRegistraionEntity userRegistraionEntity) {
+		
+		if (userRegistrationRepo.findByEmailIdOrMobileNo(userRegistraionEntity.getEmailId(), userRegistraionEntity.getMobileNo()).isPresent()) {
+            return "User already exists";
+        }
+
+        // Save the new user
+		
+		String encodedPassword = passwordEncoder.encode(userRegistraionEntity.getPassword());
+		userRegistraionEntity.setPassword(encodedPassword);
+        
+		userRegistrationRepo.save(userRegistraionEntity);
+        return "Registered successfully";
+	}
+	
 }

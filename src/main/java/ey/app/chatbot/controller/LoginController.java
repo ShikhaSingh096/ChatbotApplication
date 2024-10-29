@@ -1,11 +1,16 @@
 package ey.app.chatbot.controller;
 
+import ey.app.cahtbot.dto.LoginRequest;
 import ey.app.chatbot.entity.ChatHistoryEntity;
-import ey.app.chatbot.entity.LoginEntity;
+import ey.app.chatbot.entity.UserRegistraionEntity;
 import ey.app.chatbot.service.LoginService;
+import ey.app.chatbot.serviceImpl.AuthService;
 import ey.app.dto.conversationDto;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,13 +24,58 @@ public class LoginController {
 	
 	@Autowired
 	LoginService loginService;
+	
+	@Autowired
+    private AuthService authService;
+	
+	
 
 	@PostMapping(value = "/login")
-	public ResponseEntity<?> signin(@RequestBody LoginEntity loginEntity) throws Exception
+	public ResponseEntity<?> signin(@RequestBody LoginRequest loginRequest) throws Exception
 	{
-		LoginEntity user =  loginService.saveLoginDetails(loginEntity);
+		
+		System.out.println("HIIII---------->");
+		
+		String mobileNo = loginRequest.getMobileNo();
+	    String password = loginRequest.getPassword();
+		UserRegistraionEntity jwtToken = authService.authenticateUser(mobileNo, password);
+		
+		System.out.println("welcome in registration controller");
 
-		return new ResponseEntity<>(user, HttpStatus.CREATED);
+        if (jwtToken != null) {
+            Map<String, String> response = new HashMap<>();
+            response.put("Message", "Login successful");
+            response.put("Token", jwtToken.getToken());
+            response.put("Mobile No", jwtToken.getMobileNo());
+            response.put("Email", jwtToken.getEmailId());
+            response.put("First Name", jwtToken.getUserFirstname());
+            response.put("Middle Name", jwtToken.getUserMiddlename());
+            response.put("Last Name", jwtToken.getUserLastname());
+            
+           // response.put("token", jwtToken.get());
+            return ResponseEntity.ok(response);
+        } else {
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Invalid phone number or password");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        }
+    }
+		
+
+		
+    
+	
+
+	@PostMapping(value = "/register")
+	public ResponseEntity<?> register(@RequestBody UserRegistraionEntity userRegistraionEntity) throws Exception
+	{
+		 String responseMessage =  loginService.saveRegistrationDetails(userRegistraionEntity);
+
+		 if ("Registered successfully".equals(responseMessage)) {
+	            return ResponseEntity.status(HttpStatus.CREATED).body("{\"message\": \"" + responseMessage + "\"}");
+	        } else {
+	            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\": \"" + responseMessage + "\"}");
+	        }
 
 		
     }

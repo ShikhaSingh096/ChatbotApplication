@@ -13,8 +13,8 @@ public class LoginEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer user_id;
-    private String user_name;
-    private String pass;
+    private String mobile_no;
+    private String password;
     private String created_by;
     private String updated_by;
     private Timestamp create_date;
