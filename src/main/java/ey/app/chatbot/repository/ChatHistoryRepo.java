@@ -14,7 +14,7 @@ public interface ChatHistoryRepo extends JpaRepository<ChatHistoryEntity, Intege
 
 	List<ChatHistoryEntity> findByUserId(Integer userId);
 
-	@Query(value="SELECT convo_id,question FROM chat_history WHERE user_id =:userId ORDER BY id ASC LIMIT 1;",nativeQuery = true)
+	@Query(value="SELECT chat_id,question FROM chat_history WHERE user_id =:userId ORDER BY id ASC LIMIT 1;",nativeQuery = true)
 	conversationDto findByUserIdAndId(Integer userId);
 
 }

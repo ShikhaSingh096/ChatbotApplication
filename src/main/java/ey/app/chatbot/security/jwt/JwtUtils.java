@@ -2,6 +2,7 @@ package ey.app.chatbot.security.jwt;
 
 import java.util.Date;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Jwts;
@@ -30,9 +31,9 @@ public class JwtUtils {
         return token;
     }
 
-    public Boolean validateToken(String token, String phoneNumber) {
-        String tokenPhoneNumber = extractPhoneNumber(token);
-        return (tokenPhoneNumber.equals(phoneNumber) && !isTokenExpired(token));
+    public boolean validateToken(String token, UserDetails userDetails) {
+        final String username = extractUsername(token);
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
     public String extractPhoneNumber(String token) {
@@ -46,6 +47,10 @@ public class JwtUtils {
     private Claims extractAllClaims(String token) {
         return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
     }
-}
+
+    public String extractUsername(String token) {
+        return extractAllClaims(token).getSubject();
+    }
+	}
 
 

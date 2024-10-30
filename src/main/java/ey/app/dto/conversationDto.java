@@ -2,7 +2,7 @@ package ey.app.dto;
 
 public interface conversationDto {
 	
-	Integer getConvo_id();
+	Integer getChat_id();
 	
 	String getquestion();
 
