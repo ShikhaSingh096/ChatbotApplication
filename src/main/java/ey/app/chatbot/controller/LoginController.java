@@ -10,7 +10,6 @@ import ey.app.dto.conversationDto;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -51,6 +50,7 @@ public class LoginController {
             response.put("First Name", jwtToken.getUserFirstname());
             response.put("Middle Name", jwtToken.getUserMiddlename());
             response.put("Last Name", jwtToken.getUserLastname());
+            response.put("User Id", String.valueOf(jwtToken.getUserId()));
             
            // response.put("token", jwtToken.get());
             return ResponseEntity.ok(response);
