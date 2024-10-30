@@ -41,16 +41,18 @@ public class LoginController {
 		
 		System.out.println("welcome in registration controller");
 
+		System.out.println("jwtToken" + jwtToken);
+
         if (jwtToken != null) {
             Map<String, String> response = new HashMap<>();
-            response.put("Message", "Login successful");
-            response.put("Token", jwtToken.getToken());
-            response.put("Mobile No", jwtToken.getMobileNo());
-            response.put("Email", jwtToken.getEmailId());
-            response.put("First Name", jwtToken.getUserFirstname());
-            response.put("Middle Name", jwtToken.getUserMiddlename());
-            response.put("Last Name", jwtToken.getUserLastname());
-            response.put("User Id", String.valueOf(jwtToken.getUserId()));
+            response.put("message", "Login successful");
+            response.put("token", jwtToken.getToken());
+            response.put("mobileNo", jwtToken.getMobileNo());
+            response.put("email", jwtToken.getEmailId());
+            response.put("firstName", jwtToken.getUserFirstname());
+            response.put("middleName", jwtToken.getUserMiddlename());
+            response.put("lastName", jwtToken.getUserLastname());
+            response.put("userId", String.valueOf(jwtToken.getUserId()));
             
            // response.put("token", jwtToken.get());
             return ResponseEntity.ok(response);

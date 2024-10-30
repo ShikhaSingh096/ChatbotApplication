@@ -23,17 +23,30 @@ public class AuthService {
 
 	    public UserRegistraionEntity authenticateUser(String mobileNo, String password) {
 	        Optional<UserRegistraionEntity> userOptional = userRegistrationRepository.findByMobileNo(mobileNo);
-
+	        UserRegistraionEntity user1 = null ;
+             System.out.println("MB "+mobileNo +"PASS"+password);
+             System.out.println("USER  "+userOptional);
+            
 	        if (userOptional.isPresent()) {
 	        	UserRegistraionEntity user = userOptional.get();
-	            if (passwordEncoder.matches(password, user.getPassword())) {
+	        	 System.out.println("USER =========>"+user);
+	        	 System.out.println("USER after"+userOptional);
+	        	 System.out.println("Password in JSON "+password);
+	        	 System.out.println("Password in Db "+user.getPassword());
+	           // if (passwordEncoder.matches(password, user.getPassword())) {
+	            	if (passwordEncoder.matches(password, user.getPassword())) {
 	                String token = jwtUtil.generateToken(mobileNo);
 	                user.setToken(token);
+	                System.out.println("token  "+token);
 	                return user;
 	            }
+	            else return null;
 	        }
-	        return null;
+	       // else user =null;
+	       // System.out.println("USER  "+user);
+			return user1;
 	    }
+	    
 	}
 
 
