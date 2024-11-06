@@ -91,15 +91,15 @@ public class LoginController {
 
     }
 	
-	@GetMapping("/getLastQuestion/{userId}")
-	public conversationDto getLastQuestion(@PathVariable Integer userId) throws Exception {
+	@GetMapping("/getLastQuestion/{userId}/{chatbotId}")
+	public List<conversationDto> getLastQuestion(@PathVariable Integer userId,@PathVariable String chatbotId) throws Exception {
 
-		return loginService.getLastQuestion(userId);
+		return loginService.getLastQuestion(userId, chatbotId);
 	}
 	
-	@GetMapping("/getAllChatHistory/{userId}")
-	public List<ChatHistoryEntity> getAllChatHistory(@PathVariable Integer userId) throws Exception {
+	@GetMapping("/getAllChatHistory/{userId}/{chatbotId}")
+	public List<ChatHistoryEntity> getAllChatHistory(@PathVariable Integer userId,@PathVariable String chatbotId) throws Exception {
 
-		return loginService.getAllChatHistory(userId);
+		return loginService.getAllChatHistory(userId, chatbotId);
 	}
 }

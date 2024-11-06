@@ -98,16 +98,16 @@ public class LoginServiceImpl implements LoginService {
 	}
 
 	@Override
-	public conversationDto getLastQuestion(Integer userId) {
+	public List<conversationDto> getLastQuestion(Integer userId,String chatbotId) {
 		
-		conversationDto ConversationDto = chatHistoryRepo.findByUserIdAndId(userId);
+		List<conversationDto> ConversationDto = chatHistoryRepo.findByUserIdAndId(userId, chatbotId);
 		return ConversationDto;
 }
 
 	@Override
-	public List<ChatHistoryEntity> getAllChatHistory(Integer userId) {
+	public List<ChatHistoryEntity> getAllChatHistory(Integer userId,String chatbotId) {
 		
-		List<ChatHistoryEntity> chatHistorydetails = chatHistoryRepo.findByUserId(userId);
+		List<ChatHistoryEntity> chatHistorydetails = chatHistoryRepo.findByUserIdAndChatbotId(userId, chatbotId);
 		return chatHistorydetails;
 		
 	}

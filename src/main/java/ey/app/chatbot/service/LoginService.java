@@ -14,9 +14,9 @@ public interface LoginService {
 
 	ChatHistoryEntity saveChatHistory(ChatHistoryEntity chatHistoryEntity);
 
-	conversationDto getLastQuestion(Integer userId);
+	List<conversationDto> getLastQuestion(Integer userId,String chatbotId);
 
-	List<ChatHistoryEntity> getAllChatHistory(Integer userId);
+	List<ChatHistoryEntity> getAllChatHistory(Integer userId,String chatbotId);
 
 	String saveRegistrationDetails(UserRegistraionEntity userRegistraionEntity);
 

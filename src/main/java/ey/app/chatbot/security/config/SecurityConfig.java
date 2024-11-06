@@ -38,6 +38,9 @@ public class SecurityConfig {
 	    http
 	        .csrf().disable() // Disable CSRF for stateless applications
 	        .authorizeHttpRequests(authorize -> authorize
+	        		.requestMatchers("/upfpo_preprod/chatbot/register").permitAll()
+	        		.requestMatchers("/upfpo_preprod/chatbot/**").permitAll()
+	        		.requestMatchers("/chatbot/**").permitAll()
 	        		.requestMatchers("/chatbot/register").permitAll()
 	        		.requestMatchers("/chatbot/getAllChatHistory/{userId}").permitAll()
 	        		.requestMatchers("/chatbot/getLastQuestion/{userId}").permitAll()

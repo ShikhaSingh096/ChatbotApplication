@@ -22,7 +22,8 @@ public class ChatHistoryEntity {
     private String question;
     private String answer;
     
-    private String chatbot_id;
+    @Column(name = "chatbot_id")
+    private String chatbotId;
    
     private Timestamp create_date;
     private Timestamp update_date;
