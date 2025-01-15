@@ -1,9 +1,11 @@
 package ey.app.chatbot.serviceImpl;
 
 import ey.app.chatbot.entity.ChatHistoryEntity;
+import ey.app.chatbot.entity.FrequentQuestion;
 import ey.app.chatbot.entity.LoginEntity;
 import ey.app.chatbot.entity.UserRegistraionEntity;
 import ey.app.chatbot.repository.ChatHistoryRepo;
+import ey.app.chatbot.repository.FrequentQuestionRepository;
 import ey.app.chatbot.repository.LoginRepo;
 import ey.app.chatbot.repository.UserRegistrationRepo;
 import ey.app.chatbot.service.LoginService;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 
@@ -42,6 +45,9 @@ public class LoginServiceImpl implements LoginService {
 	
 	@Value("${spring.mail.username}")
 	private String FROM_EMAIL;
+
+	@Autowired
+	FrequentQuestionRepository frequentQuestionRepository;
 
 	@Override
 	public LoginEntity saveLoginDetails(LoginEntity loginEntity) {
@@ -127,5 +133,19 @@ public class LoginServiceImpl implements LoginService {
 		userRegistrationRepo.save(userRegistraionEntity);
         return "Registered successfully";
 	}
-	
+
+	@Override
+	public Object updateFeedbackFlag(Integer chatId, Integer questionId, Integer userId,String flag) {
+	ChatHistoryEntity chatHistoryEntity=	chatHistoryRepo.findByChatIdAndIdAndUserId(chatId,questionId,userId);
+		chatHistoryEntity.setFeedbackFlag(flag);
+	chatHistoryRepo.save(chatHistoryEntity);
+		return "Flag updated successfully";
+	}
+
+	@Override
+	public List<FrequentQuestion> getFAQ() {
+		List<FrequentQuestion> list=	frequentQuestionRepository.findAll();
+		return list;
+	}
+
 }

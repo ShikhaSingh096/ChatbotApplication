@@ -12,7 +12,9 @@ import ey.app.dto.conversationDto;
 @Repository
 public interface ChatHistoryRepo extends JpaRepository<ChatHistoryEntity, Integer> {
 
-	List<ChatHistoryEntity> findByUserIdAndChatbotId(Integer userId,String chatbotId);
+	 ChatHistoryEntity findByChatIdAndIdAndUserId(Integer chatId, Integer questionId, Integer userId) ;
+
+	List<ChatHistoryEntity> findByUserIdAndChatbotId(Integer userId, String chatbotId);
 
 	@Query(value="SELECT chat_id, question, answer FROM chat_history AS ch "
 			+ "WHERE user_id =:userId AND chatbot_id =:chatbotId "

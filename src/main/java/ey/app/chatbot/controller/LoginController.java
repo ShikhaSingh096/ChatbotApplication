@@ -2,6 +2,7 @@ package ey.app.chatbot.controller;
 
 import ey.app.cahtbot.dto.LoginRequest;
 import ey.app.chatbot.entity.ChatHistoryEntity;
+import ey.app.chatbot.entity.FrequentQuestion;
 import ey.app.chatbot.entity.UserRegistraionEntity;
 import ey.app.chatbot.service.LoginService;
 import ey.app.chatbot.serviceImpl.AuthService;
@@ -102,4 +103,22 @@ public class LoginController {
 
 		return loginService.getAllChatHistory(userId, chatbotId);
 	}
+
+
+	@PostMapping("/updateFeedbackFlag")
+	public ResponseEntity<?> updateFeedbackFlag(@RequestParam("chatId") Integer chatId,@RequestParam("questionId") Integer questionId,
+												@RequestParam("userId")Integer userId,@RequestParam("flag")String flag) throws Exception
+	{
+		Object chat =  loginService.updateFeedbackFlag(chatId,questionId,userId,flag);
+
+		return new ResponseEntity<>(chat, HttpStatus.OK);
+
+	}
+
+	@GetMapping("/getFAQ")
+	public List<FrequentQuestion> getFAQ() {
+
+		return loginService.getFAQ();
+	}
+
 }
