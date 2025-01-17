@@ -13,8 +13,8 @@ public class ChatHistoryEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	
-    @Column(name = "chat_id")
+
+    @Column(name="chat_id")
 	private Integer chatId;
 	
 	@Column(name = "user_id")
@@ -31,6 +31,8 @@ public class ChatHistoryEntity {
     
     @Column(name="feedback_flag")
     private String feedbackFlag;
+
+    
 
 
 }

@@ -44,6 +44,7 @@ import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 
@@ -78,6 +79,8 @@ public class LoginServiceImpl implements LoginService {
 	
 	@Value("${spring.mail.username}")
 	private String FROM_EMAIL;
+
+	
 
 	@Override
 	public LoginEntity saveLoginDetails(LoginEntity loginEntity) {
@@ -163,7 +166,9 @@ public class LoginServiceImpl implements LoginService {
 		userRegistrationRepo.save(userRegistraionEntity);
         return "Registered successfully";
 	}
-	
+
+
+
 	@Override
 	public ResponseEntity<?> uploadImages(MultipartFile file, String stateWiseImagesEntity4) {
 		
