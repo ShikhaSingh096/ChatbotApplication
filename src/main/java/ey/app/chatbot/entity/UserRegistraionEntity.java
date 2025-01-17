@@ -2,7 +2,7 @@ package ey.app.chatbot.entity;
 
 import java.time.LocalDateTime;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Data;
 
 @Entity

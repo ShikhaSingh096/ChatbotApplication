@@ -2,7 +2,7 @@ package ey.app.chatbot.entity;
 
 import java.sql.Timestamp;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Data;
 
 @Entity
@@ -14,7 +14,8 @@ public class ChatHistoryEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	private Integer chat_id;
+    @Column(name = "chat_id")
+	private Integer chatId;
 	
 	@Column(name = "user_id")
 	private Integer userId;
@@ -27,6 +28,9 @@ public class ChatHistoryEntity {
    
     private Timestamp create_date;
     private Timestamp update_date;
+    
+    @Column(name="feedback_flag")
+    private String feedbackFlag;
 
 
 }

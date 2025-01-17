@@ -7,54 +7,80 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import ey.app.chatbot.security.jwt.JwtRequestFilter;
+import ey.app.chatbot.security.jwt.JwtUtils;
+
 
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+	
+	 private final JwtUtils jwtUtils;
+	    private final UserDetailsService userDetailsService;
+
+	    public SecurityConfig(JwtUtils jwtUtils, UserDetailsService userDetailsService) {
+	        this.jwtUtils = jwtUtils;
+	        this.userDetailsService = userDetailsService;
+	    }
+	    
+	    @Bean
+	    public JwtRequestFilter jwtRequestFilter(JwtUtils jwtUtil, UserDetailsService userDetailsService) {
+	        return new JwtRequestFilter(jwtUtil, userDetailsService);
+	    }
 
 	 
-//	@Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//		http
-//        .csrf().disable() // Disable CSRF protection for testing (enable in production)
-//        .authorizeRequests()
-//            .requestMatchers("/chatbot/login").permitAll() // Allow access to the login endpoint
-//            .requestMatchers("/chatbot/register").permitAll() // Allow access to the registration endpoint
-//            .anyRequest().authenticated() // Require authentication for all other endpoints
-//        .and()
-//        .httpBasic(); // Optional: Enable basic authentication for testing
-//
-//    return http.build();
-//    }
+/*	@Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		http
+       .csrf().disable() // Disable CSRF protection for testing (enable in production)
+       .authorizeRequests()
+           .antMatchers("/chatbot/login").permitAll() // Allow access to the login endpoint
+           .antMatchers("/chatbot/register").permitAll() // Allow access to the registration endpoint
+       //    .antMatchers("/chatbot/**").permitAll() // Allow access to the registration endpoint
+            
+		   .anyRequest().authenticated() // Require authentication for all other endpoints
+       .and()
+       .httpBasic(); // Optional: Enable basic authentication for testing
+
+   return http.build();
+   } */
+
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-	    http
+		
+	    JwtRequestFilter jwtRequestFilter = new JwtRequestFilter(jwtUtils, userDetailsService);
+
+	    HttpSecurity addFilterBefore = http
 	        .csrf().disable() // Disable CSRF for stateless applications
 	        .authorizeHttpRequests(authorize -> authorize
-	        		.requestMatchers("/upfpo_preprod/chatbot/register").permitAll()
-	        		.requestMatchers("/upfpo_preprod/chatbot/**").permitAll()
-	        		.requestMatchers("/chatbot/**").permitAll()
-	        		.requestMatchers("/chatbot/register").permitAll()
-	        		.requestMatchers("/chatbot/getAllChatHistory/{userId}").permitAll()
-	        		.requestMatchers("/chatbot/getLastQuestion/{userId}").permitAll()
-	        		.requestMatchers("/chatbot/saveChatHistory").permitAll()
-	        		.requestMatchers("/chatbot/login").permitAll() // Allow login without auth
+	        		
+	        		.antMatchers("/chatbot/*").permitAll() 
+	        		.antMatchers("/chatbot/register").permitAll()
+	        		.antMatchers("/chatbot/saveChatHistory").permitAll()
+	        		.antMatchers("/chatbot/getLastQuestion/{userId}/{chatbotId").permitAll()
+	        		.antMatchers("/chatbot/uploadImages").permitAll()
+	        		.antMatchers("/chatbot/download/file/{fileName:.+}").permitAll()
+	        		.antMatchers("/chatbot/getImageList/{stateId}").permitAll()
+	        		.antMatchers("/chatbot/updateFeedbackFlag").permitAll()
+	        		.antMatchers("/chatbot/getFAQ").permitAll()
+	        		.antMatchers("/chatbot/getAllChatHistory/{userId}/{chatbotId}/{chatId}").permitAll()
+	        		.antMatchers("/chatbot/login").permitAll() // Allow login without auth
 	            .anyRequest().authenticated() // Require authentication for all other requests
 	        )
 	        .sessionManagement(session -> session
 	            .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Use stateless session
 	        )
-	        .addFilterBefore(jwtRequestFilter(), UsernamePasswordAuthenticationFilter.class); // Add JWT filter
+	        .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // Add JWT filter
 
 	    return http.build();
-	}
+	} 
 	
 	
 //	@Bean
@@ -74,7 +100,7 @@ public class SecurityConfig {
 ////            );
 //
 //        return http.build(); // Build the security filter chain
-//    }
+//    } */
 
 	
 
@@ -83,15 +109,14 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder(); // Password encoder for hashing passwords
     }
 
+
     
    
-    @Bean
+   @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
-    }
+    } 
     
-    @Bean
-    public JwtRequestFilter jwtRequestFilter() {
-        return new JwtRequestFilter();
-    }
+  
 }
+
